@@ -143,6 +143,7 @@ function addDepartment() {
         }).then(() =>
         startPrompt());
     })
+}
 
     function addEmployee() {
         inquirer.prompt([{

@@ -19,18 +19,19 @@ CREATE TABLE employee_role (
   PRIMARY KEY (id),
   FOREIGN KEY (department_id)
   REFERENCES department(id)
-  ON DELETE SET NULL
+  ON DELETE CASCADE
 );
 
 CREATE TABLE employee (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     role_id INT,
     manager_id INT,
-    FOREIGN KEY (role_id)
-    REFERENCES employee_role(id)
-    ON DELETE SET NULL,
-    CONSTRAINT manager_check FOREIGN KEY (manager_id)
-    REFERENCES employee(id)
+    FOREIGN KEY (role_id) 
+    REFERENCES employee_role(id) 
+    ON DELETE CASCADE,
+    FOREIGN KEY (manager_id) 
+    REFERENCES employee(id) 
+    ON DELETE SET NULL
 );

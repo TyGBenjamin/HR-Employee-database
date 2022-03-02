@@ -175,7 +175,7 @@ function addEmployee() {
       {
         name: "role_id",
         type: "number",
-        message: "What is the role id?",
+        message: "What is their role id?",
         validate: (value) => {
           if (value) {
             return true;
@@ -197,18 +197,79 @@ function addEmployee() {
         manager_id = answer.manager_id;
       }
       const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) 
-        VALUES ('${answer.firstName}', '${answer.lastName}', ${answer.role_id}, ${manager_id})`;
+      VALUES ('${answer.firstName}', '${answer.lastName}', ${answer.role_id}, ${manager_id})`;
+
+    db.query(sql, (err) => {
+      if (err) throw err;
+      console.log(`New employee ${answer.firstName} ${answer.lastName} has been added`);
+      options();
+    })
+  });
+}
+
+
+  function addRole() {
+    const sql = "SELECT * FROM department";
+    db.query(sql, (err, results) => {
+      if (err) throw err;
   
-      db.query(sql, (err) => {
-        if (err) throw err;
-        console.log(`New employee ${answer.firstName} ${answer.lastName} has been added`);
-        startPrompt();
-      })
+      inquirer.prompt([
+        {
+          name: "title",
+          type: "input",
+          message: "What is their title?",
+          validate: (value) => {
+            if (value) {
+              return true;
+            } else {
+              console.log("Please enter the title.");
+            }
+          }
+        },
+        {
+          name: "salary",
+          type: "input",
+          message: "What is the salary",
+          validate: (value) => {
+            if (isNaN(value) === false) {
+              return true;
+            }
+            console.log("Please enter a number");
+          }
+        },
+        {
+          name: "department_ID",
+          type: "rawlist",
+          message: "What department will new role be in?",
+          choices: () => {
+            let currentDeptIds = [];
+            for (let i = 0; i < results.length; i++) {
+              currentDeptIds.push(results[i].name);
+            }
+            return currentDeptIds;
+          },
+        }
+      ]).then(answer => {
+        let selectDept;
+        for (let i = 0; i < results.length; i++) {
+          if (results[i].name === answer.department_ID) {
+            selectDept = results[i];
+          }
+        }
+  
+        const sql =
+          `INSERT INTO employee_role (title, salary, department_id) 
+          VALUE ('${answer.title}','${answer.salary}','${chosenDept.id}')`;
+  
+        db.query(sql, (err) => {
+          if (err) throw err;
+          console.log(`New Role ${answer.title} has been added`);
+          startPrompt();
+        }
+        )
+      });
     });
   }
-
-
-
 
 startPrompt();
 

@@ -145,30 +145,70 @@ function addDepartment() {
     })
 }
 
-    function addEmployee() {
-        inquirer.prompt([{
-            type:'input',
-            name: 'newEmployeeFirst',
-            message: 'What is their first name?'
-        },
-        {
-        type:'input',
-        name: 'newEmployeeLast',
-        message: 'What is their last name?'
+
+function addEmployee() {
+    inquirer.prompt([
+      {
+        name: "firstName",
+        type: "input",
+        message: "What is the first name of the new employee?",
+        validate: (value) => {
+          if (value) {
+            return true;
+          } else {
+            console.log("Please enter a name");
+          }
         }
-        ]).then((answer)=>{
-            const sql = 'INSERT INTO employee (first_name, last_name) VALUE (?)';
-            db.promise().query(sql,answer.newEmployeeFirst, answer.newEmployeeLast, (err, result) => {
-                if (err) throw err;
-                console.log('Employee Added');
-                console.table(result);
-            }).then(() =>
-            startPrompt());
-        })
+      },
+      {
+        name: "lastName",
+        type: "input",
+        message: "What is the last name of the new employee?",
+        validate: (value) => {
+          if (value) {
+            return true;
+          } else {
+            console.log("Please enter the last name.");
+          }
+        }
+      },
+      {
+        name: "role_id",
+        type: "number",
+        message: "What is the role id?",
+        validate: (value) => {
+          if (value) {
+            return true;
+          } else {
+            console.log("Please enter the role id.");
+          }
+        }
+      },
+      {
+        name: "manager_id",
+        type: "input",
+        message: "What is the manager id?(leave blank if employee is not a manager)",
+      }
+    ]).then(answer => {
+      let manager_id;
+      if (answer.manager_id === '') {
+        manager_id = null;
+      } else {
+        manager_id = answer.manager_id;
+      }
+      const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) 
+        VALUES ('${answer.firstName}', '${answer.lastName}', ${answer.role_id}, ${manager_id})`;
+  
+      db.query(sql, (err) => {
+        if (err) throw err;
+        console.log(`New employee ${answer.firstName} ${answer.lastName} has been added`);
+        startPrompt();
+      })
+    });
+  }
 
 
 
-}
 
 startPrompt();
 

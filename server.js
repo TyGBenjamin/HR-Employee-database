@@ -240,7 +240,7 @@ function addEmployee() {
         {
           name: "department_ID",
           type: "rawlist",
-          message: "What department will new role be in?",
+          message: "Which department will new role be in?",
           choices: () => {
             let currentDeptIds = [];
             for (let i = 0; i < results.length; i++) {
@@ -259,7 +259,7 @@ function addEmployee() {
   
         const sql =
           `INSERT INTO employee_role (title, salary, department_id) 
-          VALUE ('${answer.title}','${answer.salary}','${chosenDept.id}')`;
+          VALUE ('${answer.title}','${answer.salary}','${selectDept.id}')`;
   
         db.query(sql, (err) => {
           if (err) throw err;

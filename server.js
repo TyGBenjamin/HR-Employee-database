@@ -392,7 +392,7 @@ function addEmployee() {
     {
       name: "deleteEmployee",
       type: "number",
-      message: "Enter the ID of the Employee you would liek to delete",
+      message: "Enter the ID of the Employee you would like to terminate",
       validate: (value) => {
         if (!isNaN(value)) {
           return true;

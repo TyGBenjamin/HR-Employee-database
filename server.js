@@ -85,7 +85,7 @@ function startPrompt() {
                 break;
 
             case 'delte an employee':
-                deleteEmployee();
+                fireEmployee();
                 break;
 
             default: 'Exit'
@@ -205,7 +205,7 @@ function addEmployee() {
     db.query(sql, (err) => {
       if (err) throw err;
       console.log(`New employee ${answer.firstName} ${answer.lastName} has been added`);
-      options();
+      startPrompt();
     })
   });
 }
@@ -307,7 +307,7 @@ function addEmployee() {
       db.query(sql, (err) => {
         if (err) throw err;
         console.log(`No.${answer.employee_id} employee role has been updated`);
-        options();
+        startPrompt();
       })
     })
   }
@@ -318,6 +318,7 @@ function addEmployee() {
       db.query(sqlShow, (error, results) =>{
           if (error) throw error;
           else {
+        console.log(results);
         console.table(results)
           };
       })
@@ -325,12 +326,12 @@ function addEmployee() {
       {
         name: "department_ID",
         type: "number",
-        message: "Which department you would like to delete?(Enter the department ID)",
+        message: "Enter the ID of the Department you would like to delete",
         validate: (value) => {
-          if (value) {
+          if (!isNaN(value)) {
             return true;
           } else {
-            console.log("Please enter the department id.");
+            console.log("Please enter valid id number.");
           }
         }
       }
@@ -344,6 +345,72 @@ function addEmployee() {
       })
     });
   }
+
+  function deleteRole() {
+    const sqlShow = "SELECT * FROM employee_role";
+    db.query(sqlShow, (error, results) =>{
+        if (error) throw error;
+        else {
+      console.log(results);
+      console.table(results)
+        };
+    })
+  inquirer.prompt([
+    {
+      name: "deletedRole",
+      type: "number",
+      message: "Enter the ID of the Role you would like to remove",
+      validate: (value) => {
+        if (!isNaN(value)) {
+          return true;
+        } else {
+          console.log("Please enter valid id number.");
+        }
+      }
+    }
+  ]).then(answer => {
+      const deletedID = `${answer.deletedRole}`
+    const sql = `DELETE from employee_role where id = ?`
+    db.query(sql, deletedID, (err, results) => {
+      if (err) throw err;
+      console.log(`${deletedID} role has been removed`);
+      startPrompt();
+    })
+  });
+}
+
+  function fireEmployee() {
+    const sqlShow = "SELECT * FROM employee";
+    db.query(sqlShow, (error, results) =>{
+        if (error) throw error;
+        else {
+      console.log(results);
+      console.table(results)
+        };
+    })
+  inquirer.prompt([
+    {
+      name: "deleteEmployee",
+      type: "number",
+      message: "Enter the ID of the Employee you would liek to delete",
+      validate: (value) => {
+        if (!isNaN(value)) {
+          return true;
+        } else {
+          console.log("Please enter valid id number.");
+        }
+      }
+    }
+  ]).then(answer => {
+      const deletedID = `${answer.department_ID}`
+    const sql = `DELETE from employee where id = ?`
+    db.query(sql, deletedID, (err, results) => {
+      if (err) throw err;
+      console.log(`${deletedID} department has been deleted`);
+      startPrompt();
+    })
+  });
+}
 
 
 

@@ -88,7 +88,7 @@ function startPrompt() {
                 deleteEmployee();
                 break;
 
-            default:
+            default: 'Exit'
                 break;
         }
     });
@@ -127,6 +127,9 @@ function showEmployee() {
     })
 }
 
+
+// Function to ADD DEPARTMENT
+
 function addDepartment() {
     inquirer.prompt([{
         type:'input',
@@ -145,7 +148,7 @@ function addDepartment() {
     })
 }
 
-
+// Function to ADD EMPLOYEE 
 function addEmployee() {
     inquirer.prompt([
       {
@@ -207,7 +210,7 @@ function addEmployee() {
   });
 }
 
-
+// Function to ADD ROLE 
   function addRole() {
     const sql = "SELECT * FROM department";
     db.query(sql, (err, results) => {
@@ -270,6 +273,79 @@ function addEmployee() {
       });
     });
   }
+
+
+  function updateRole() {
+    inquirer.prompt([
+      {
+        name: "employee_id",
+        type: "number",
+        message: "Please enter the ID of the employee profile you would like to update.",
+        validate: (value) => {
+          if (value) {
+            return true;
+          } else {
+            console.log("Please enter the employee id.");
+          }
+        }
+      },
+      {
+        name: "role_id",
+        type: "number",
+        message: "Please update the employee's role ID.",
+        validate: (value) => {
+          if (value) {
+            return true;
+          } else {
+            console.log("Please enter the employee new role id.");
+          }
+        }
+      }
+    ]).then(answer => {
+      const sql = `UPDATE employee SET role_id = '${answer.role_id}' WHERE id = '${answer.employee_id}'`
+  
+      db.query(sql, (err) => {
+        if (err) throw err;
+        console.log(`No.${answer.employee_id} employee role has been updated`);
+        options();
+      })
+    })
+  }
+
+
+  function deleteDepartment() {
+      const sqlShow = "SELECT * FROM deparment";
+      db.query(sqlShow, (error, results) =>{
+          if (error) throw error;
+          else {
+        console.table(results)
+          };
+      })
+    inquirer.prompt([
+      {
+        name: "department_ID",
+        type: "number",
+        message: "Which department you would like to delete?(Enter the department ID)",
+        validate: (value) => {
+          if (value) {
+            return true;
+          } else {
+            console.log("Please enter the department id.");
+          }
+        }
+      }
+    ]).then(answer => {
+        const deletedID = `${answer.department_ID}`
+      const sql = `DELETE from department where id = ?`
+      db.query(sql, deletedID, (err, results) => {
+        if (err) throw err;
+        console.log(`${deletedID} department has been deleted`);
+        startPrompt();
+      })
+    });
+  }
+
+
 
 startPrompt();
 

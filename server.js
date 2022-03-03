@@ -106,7 +106,7 @@ function showDepartment() {
 }
 
 function showRole() {
-    const sql = 'SELECT * FROM role';
+    const sql = 'SELECT * FROM employee_role';
 
     db.query(sql, (err, result) => {
         if (err) throw err;
@@ -117,7 +117,7 @@ function showRole() {
 }
 
 function showEmployee() {
-    const sql = 'SELECT * FROM employees';
+    const sql = 'SELECT * FROM employee';
 
     db.query(sql, (err, result) => {
         if (err) throw err;
@@ -148,7 +148,73 @@ function addDepartment() {
     })
 }
 
+// Function to ADD ROLE 
+function addRole() {
+    const sql = "SELECT * FROM department";
+    db.query(sql, (err, results) => {
+      if (err) throw err;
+  
+      inquirer.prompt([
+        {
+          name: "title",
+          type: "input",
+          message: "What is their title?",
+          validate: (value) => {
+            if (value) {
+              return true;
+            } else {
+              console.log("Please enter the title.");
+            }
+          }
+        },
+        {
+          name: "salary",
+          type: "input",
+          message: "What is the salary",
+          validate: (value) => { 
+              parseInt(value)
+            if (isNaN(value) === false) {
+              return true;
+            }
+            console.log("Please enter a number");
+          }
+        },
+        {
+          name: "department_ID",
+          type: "rawlist",
+          message: "Which department will new role be in?",
+          choices: () => {
+            let currentDeptIds = [];
+            for (let i = 0; i < results.length; i++) {
+              currentDeptIds.push(results[i].name);
+            }
+            return currentDeptIds;
+          },
+        }
+      ]).then(answer => {
+        let selectDept;
+        for (let i = 0; i < results.length; i++) {
+          if (results[i].name === answer.department_ID) {
+            selectDept = results[i];
+          }
+        }
+  
+        const sql =
+          `INSERT INTO employee_role (title, salary, department_id) 
+          VALUE ('${answer.title}','${answer.salary}','${selectDept.id}')`;
+  
+        db.query(sql, (err) => {
+          if (err) throw err;
+          console.log(`New Role ${answer.title} has been added`);
+          startPrompt();
+        }
+        )
+      });
+    });
+  }
+
 // Function to ADD EMPLOYEE 
+// IN ORDER TO ADD EMPLOYEE YOU MUST FIRST ADD ROLE AND DEPARTMENT
 function addEmployee() {
     inquirer.prompt([
       {
@@ -210,69 +276,7 @@ function addEmployee() {
   });
 }
 
-// Function to ADD ROLE 
-  function addRole() {
-    const sql = "SELECT * FROM department";
-    db.query(sql, (err, results) => {
-      if (err) throw err;
-  
-      inquirer.prompt([
-        {
-          name: "title",
-          type: "input",
-          message: "What is their title?",
-          validate: (value) => {
-            if (value) {
-              return true;
-            } else {
-              console.log("Please enter the title.");
-            }
-          }
-        },
-        {
-          name: "salary",
-          type: "input",
-          message: "What is the salary",
-          validate: (value) => {
-            if (isNaN(value) === false) {
-              return true;
-            }
-            console.log("Please enter a number");
-          }
-        },
-        {
-          name: "department_ID",
-          type: "rawlist",
-          message: "Which department will new role be in?",
-          choices: () => {
-            let currentDeptIds = [];
-            for (let i = 0; i < results.length; i++) {
-              currentDeptIds.push(results[i].name);
-            }
-            return currentDeptIds;
-          },
-        }
-      ]).then(answer => {
-        let selectDept;
-        for (let i = 0; i < results.length; i++) {
-          if (results[i].name === answer.department_ID) {
-            selectDept = results[i];
-          }
-        }
-  
-        const sql =
-          `INSERT INTO employee_role (title, salary, department_id) 
-          VALUE ('${answer.title}','${answer.salary}','${selectDept.id}')`;
-  
-        db.query(sql, (err) => {
-          if (err) throw err;
-          console.log(`New Role ${answer.title} has been added`);
-          startPrompt();
-        }
-        )
-      });
-    });
-  }
+
 
 
   function updateRole() {

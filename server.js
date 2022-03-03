@@ -352,14 +352,6 @@ function addEmployee() {
   }
 
   function deleteRole() {
-    const sqlShow = "SELECT * FROM employee_role";
-    db.query(sqlShow, (error, results) =>{
-        if (error) throw error;
-        else {
-      console.log(results);
-      console.table(results)
-        };
-    })
   inquirer.prompt([
     {
       name: "deletedRole",
@@ -385,14 +377,6 @@ function addEmployee() {
 }
 
   function fireEmployee() {
-    const sqlShow = "SELECT * FROM employee";
-    db.query(sqlShow, (error, results) =>{
-        if (error) throw error;
-        else {
-      console.log(results);
-      console.table(results)
-        };
-    })
   inquirer.prompt([
     {
       name: "deleteEmployee",

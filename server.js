@@ -318,14 +318,14 @@ function addEmployee() {
 
 
   function deleteDepartment() {
-      const sqlShow = "SELECT * FROM deparment";
-      db.query(sqlShow, (error, results) =>{
-          if (error) throw error;
-          else {
-        console.log(results);
-        console.table(results)
-          };
-      })
+    //   const sqlShow = "SELECT * FROM deparment";
+    //   db.query(sqlShow, (error, results) =>{
+    //       if (error) throw error;
+    //       else {
+    //     console.log(results);
+    //     console.table(results)
+    //       };
+    //   })
     inquirer.prompt([
       {
         name: "department_ID",
@@ -340,11 +340,12 @@ function addEmployee() {
         }
       }
     ]).then(answer => {
-        const deletedID = `${answer.department_ID}`
+        let deletedID = `${answer.department_ID}`
       const sql = `DELETE from department where id = ?`
       db.query(sql, deletedID, (err, results) => {
         if (err) throw err;
         console.log(`${deletedID} department has been deleted`);
+        console.table(results);
         startPrompt();
       })
     });

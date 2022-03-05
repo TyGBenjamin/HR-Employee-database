@@ -236,7 +236,7 @@ function addEmployee() {
     if (err) throw err;
     console.table(results);
     console.table(`REMINDER:
-        \n sDepartment and role must be created prior to adding an employee`);
+        \n Department and role must be created prior to adding an employee`);
 
     inquirer
       .prompt([

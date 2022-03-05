@@ -23,7 +23,7 @@ then initiate the prompts to be displayed and answered.
 ## Preview
 
 A video for previewing the usage of this application can be found in the following link
-[Click Here for Video Walkthrough](https://studio.youtube.com/video/ImLtSGCoa2Q/edit)
+[Click Here for Video Walkthrough](https://studio.youtube.com/video/ImLtSGCoa2Q)
 
 ![Screenshot of Application](https://user-images.githubusercontent.com/94323045/156898847-49e5b73f-88a4-49ba-90a3-9392f44d8d59.png)
 
